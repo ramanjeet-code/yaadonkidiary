@@ -1,27 +1,31 @@
-import React, { useState, useCallback } from 'react';
-import { PenTool, Loader2, Copy, Share2, RefreshCw } from 'lucide-react';
-import shayariData from './data/shayaris.json';
-import { findCategory } from './data/categories';
+import React, { useState, useCallback } from "react";
+import { PenTool, Loader2, Copy, Share2, RefreshCw } from "lucide-react";
+import shayariData from "./data/shayaris.json";
+import { findCategory } from "./data/categories";
 
 function App() {
-  const [input, setInput] = useState('');
-  const [shayari, setShayari] = useState('');
+  const [input, setInput] = useState("");
+  const [shayari, setShayari] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [lastCategory, setLastCategory] = useState<string | null>(null);
 
   const generateShayari = useCallback(async () => {
     if (!input.trim()) {
-      setError('please choose other world ,Ex-love.Sad,pyaar,dard')
+      setError("please choose other world ,Ex-love.Sad,pyaar,dard");
+      return;
+    }
 
     try {
       // Simulate loading for better UX
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       const category = findCategory(input);
-      
+
       if (!category) {
-        setError('माफ़ करें, इस विषय पर शायरी उपलब्ध नहीं है\n Sorry poetry is not avaliable on this subbject ,please choose other one');
+        setError(
+          "माफ़ करें, इस विषय पर शायरी उपलब्ध नहीं है\n Sorry poetry is not avaliable on this subbject ,please choose other one"
+        );
         return;
       }
 
@@ -30,7 +34,7 @@ function App() {
       setShayari(shayaris[randomIndex]);
       setLastCategory(category);
     } catch (err) {
-      setError('Something went wrong ,please try again');
+      setError("Something went wrong ,please try again");
     } finally {
       setIsLoading(false);
     }
@@ -39,8 +43,8 @@ function App() {
   const getNewShayari = useCallback(async () => {
     if (lastCategory) {
       setIsLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 300));
-      
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
       const shayaris = shayariData[lastCategory];
       const randomIndex = Math.floor(Math.random() * shayaris.length);
       setShayari(shayaris[randomIndex]);
@@ -51,9 +55,9 @@ function App() {
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(shayari);
-      alert('शायरी कॉपी हो गई है!');
+      alert("शायरी कॉपी हो गई है!");
     } catch (err) {
-      alert('कॉपी करने में समस्या हुई');
+      alert("कॉपी करने में समस्या हुई");
     }
   };
 
@@ -61,7 +65,7 @@ function App() {
     try {
       await navigator.share({
         text: shayari,
-        title: 'शायरी शेयर करें',
+        title: "शायरी शेयर करें",
       });
     } catch (err) {
       // Ignore share errors
@@ -76,21 +80,20 @@ function App() {
             <PenTool className="w-10 h-10 text-purple-600" />
             <h1 className="text-4xl font-bold text-gray-800">शायरी जनरेटर</h1>
           </div>
-          <p className="text-gray-600">put word in hindi ,english,tamil,telgu,japanese,chinese,kannad</p>
+          <p className="text-gray-600"></p>
         </div>
-             <div>
-               Welocome to Yaado ki shayari
-             </div>
+        <div>Welocome to Yaado ki shayari</div>
         <div className="bg-white rounded-xl shadow-xl p-6 space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-             Hi you can enter world in Japanese,Hindi,English,HiEnglish,Tamil,Telgu,Kannad
+              Hi you can enter word in
+              Japanese,Hindi,English,HiEnglish,Tamil,Telgu,Kannad
             </label>
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="जैसे: love, प्यार, दोस्ती, life, खुशी..."
+              placeholder="जैसे: love, प्यार, दोस्ती, life,prema, खुशी..."
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
             />
           </div>
@@ -129,7 +132,9 @@ function App() {
           {shayari && (
             <div className="mt-6 space-y-4">
               <div className="bg-purple-50 rounded-lg p-6 font-hindi relative">
-                <p className="text-lg text-gray-800 whitespace-pre-line">{shayari}</p>
+                <p className="text-lg text-gray-800 whitespace-pre-line">
+                  {shayari}
+                </p>
                 <div className="absolute top-2 right-2 flex space-x-2">
                   <button
                     onClick={copyToClipboard}
